@@ -1,10 +1,6 @@
-const mongoose = require('../../database');
+const mongoose = require('mongoose');
 
 const TaskSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        require: true
-    },
     description: {
         type: String,
         require: true
@@ -13,9 +9,13 @@ const TaskSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    isCompleted: {
+      type: Boolean,
+      default: false,
+    },
     finishDate: {
         type: Date,
-        require: true
+        require: false
     }
 })
 

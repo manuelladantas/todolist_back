@@ -1,28 +1,29 @@
 const express = require('express');
 const projectService = require('../services/project.service')
+const guard = require('./guards/auth.guard')
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', guard.authGuard, async (req, res) => {
   try {
-    const result = await projectService.getAll(req.payload._id);
+    const result = await projectService.getAll(req.user);
     res.send(result);
   } catch (error) {
     res.status(400).send({error: 'Error loading projects'});
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', guard.authGuard, async (req, res) => {
   try {
      const project = req.body;
-     const result = await projectService.create(project);
+     const result = await projectService.create(project, req.user);
      res.send(result);
   } catch (error) {
     res.status(400).send({error: 'Error to create a project'});
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', guard.authGuard, async (req, res) => {
   try {
     const result = await projectService.getById(req.params.id);
     res.send(result);
@@ -31,27 +32,27 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', guard.authGuard, async (req, res) => {
   try {
-    const result = await projectService.update(req.params.id, req.body.title);
+    const result = await projectService.update(req.params.id, req.body.title, req.user);
     res.send(result);
   } catch (error) {
     res.status(400).send({error: 'Error to update a project'});
   }
 });
 
-router.post('/task/:id', async (req, res) => {
+router.post('/task/:id', guard.authGuard, async (req, res) => {
   try {
-    const result = await projectService.addTask(req.params.id, req.body);
+    const result = await projectService.addTask(req.params.id, req.body, req.user);
     res.send(result);
   } catch (error) {
-    res.status(400).send({error: 'Error to update a project'});
+    res.status(400).send({error: 'Error adding task to project'});
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', guard.authGuard, async (req, res) => {
   try {
-      const result = await projectService.remove(req.params.id);
+      const result = await projectService.remove(req.params.id, req.user);
       res.send(result);
   } catch (error) {
     res.status(400).send({error: 'Error to remove a project'});

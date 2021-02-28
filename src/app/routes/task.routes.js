@@ -1,9 +1,10 @@
 const express = require('express');
 const taskService = require('../services/task.service');
+const guard = require('./guards/auth.guard')
 
 const router = express.Router();
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', guard.authGuard, async (req, res) => {
   try {
     const result = await taskService.update(req.params.id, req.body);
     res.send(result);
@@ -12,7 +13,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', guard.authGuard, async (req, res) => {
   try {
       const result = await taskService.remove(req.params.id);
       res.send(result);

@@ -7,6 +7,9 @@ module.exports = {
   },
   
   update: async (_id, task) => {
+      if (task.isCompleted) {
+          task.finishDate = new Date();
+      }
       return await taskModel.findOneAndUpdate({ _id, isCompleted: false }, task, { new: true });
   },
   

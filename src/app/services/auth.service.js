@@ -16,7 +16,6 @@ module.exports = {
     },
 
     login: async (user) => {
-        
         const obj = {
             _id: user._id,
             email: user.email
